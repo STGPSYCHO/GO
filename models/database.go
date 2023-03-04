@@ -5,13 +5,14 @@ import (
 	"gorm.io/gorm"
 )
 
-func ConnectDB() *gorm.DB {
-	dsn := "host=localhost user=gorm password=gorm dbname=Go_Bacnkend port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+var DB *gorm.DB
+
+func ConnectDB() {
+	dsn := "host=localhost user=gorm password=gorm dbname=Go_Backend port=5432 sslmode=disable TimeZone=Asia/Shanghai"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("Не удалось подключиться к базе данных")
 	}
 	db.AutoMigrate(&User{})
-
-	return db
+	DB = db
 }
