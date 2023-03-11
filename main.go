@@ -11,6 +11,7 @@ import (
 func main() {
 
 	route := gin.Default()
+	route.LoadHTMLGlob("templates/*")
 
 	models.ConnectDB()
 

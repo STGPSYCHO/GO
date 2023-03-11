@@ -26,26 +26,17 @@ func GetAllUsersByHeaders(context *gin.Context) {
 
 	models.DB.Find(&users)
 
-	// if q, ok := context.GetQuery("format"); ok {
-	// 	if q == "json" {
-	// 		context.JSON(http.StatusOK, gin.H{"users": users})
-	// 	}
-	// 	if q == "text" {
-	// 		context.Writer.WriteHeader(http.StatusOK)
-	// 		context.Writer.Header().Set("Content-Type", "text/plain")
-	// 		context.Writer.Write([]byte("Success"))
-	// 	}
-	// } else {
-	// 	context.JSON(http.StatusOK, gin.H{"users": users})
-	// }
 	if (context.ContentType() == "application/json") || (context.ContentType() == "text/plain") {
-		if context.GetHeader("Accept") == "application/json" {
+		switch context.GetHeader("Accept") {
+		case "application/json":
 			context.JSON(http.StatusOK, gin.H{"users": users})
-		} else if context.GetHeader("Accept") == "text/plain" {
-			context.Writer.WriteHeader(http.StatusOK)
-			context.Writer.Header().Set("Content-Type", "text/plain")
-			context.Writer.Write([]byte("Success"))
-		} else {
+		case "text/plain":
+
+			// Заменить Success на свой вывод юзеров.
+			// context.Writer.WriteHeader(http.StatusOK)
+			// context.Writer.Header().Set("Content-Type", "text/plain")
+			// context.Writer.Write([]byte("Success"))
+		default:
 			context.JSON(http.StatusNotFound, gin.H{"error": "Страница не найдена"})
 		}
 	} else {
@@ -66,24 +57,18 @@ func GetAllUsers(context *gin.Context) {
 			context.JSON(http.StatusOK, gin.H{"users": users})
 		}
 		if q == "text" {
-			context.Writer.WriteHeader(http.StatusOK)
-			context.Writer.Header().Set("Content-Type", "text/plain")
-			context.Writer.Write([]byte("Success"))
+			// Заменить Success на свой вывод юзеров.
+			// context.Writer.WriteHeader(http.StatusOK)
+			// context.Writer.Header().Set("Content-Type", "text/plain")
+			// context.Writer.Write([]byte("Success"))
 		}
 	} else {
-		context.JSON(http.StatusOK, gin.H{"users": users})
+		context.HTML(
+			http.StatusOK,
+			"index.html",
+			gin.H{"users": users},
+		)
 	}
-
-	// if context.ContentType() == "application/json" {
-	// 	context.JSON(http.StatusOK, gin.H{"users": users})
-	// } else if context.ContentType() == "text/plain" {
-	// 	context.Writer.WriteHeader(http.StatusOK)
-	// 	context.Writer.Header().Set("Content-Type", "text/plain")
-	// 	context.Writer.Write([]byte("Success"))
-	// } else {
-	// 	context.JSON(http.StatusNotFound, gin.H{"error": "Страница не найдена"})
-	// }
-
 }
 
 // GET /users/:id
@@ -96,7 +81,17 @@ func GetUser(context *gin.Context) {
 		return
 	}
 
-	context.JSON(http.StatusOK, gin.H{"users": users})
+	// context.JSON(http.StatusOK, gin.H{"users": users})
+	context.HTML(
+		http.StatusOK,
+		"user.html",
+		gin.H{
+			"ID":         users.ID,
+			"First_name": users.First_name,
+			"Last_name":  users.Last_name,
+			"Email":      users.Email,
+		},
+	)
 }
 
 // POST /users
