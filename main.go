@@ -15,6 +15,7 @@ func main() {
 	models.ConnectDB()
 
 	route.GET("/users", controllers.GetAllUsers)
+	route.GET("/users-by-headers", controllers.GetAllUsersByHeaders)
 	route.POST("/users", controllers.CreateUser)
 	route.GET("/users/:id", controllers.GetUser)
 	route.PATCH("/users/:id", controllers.UpdateUser)

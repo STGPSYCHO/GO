@@ -19,9 +19,9 @@ type UpdateUserInput struct {
 	Email      string `json:"email"`
 }
 
-// GET /users
+// GET /users-by-headers
 // Получаем список всех юзеров
-func GetAllUsers(context *gin.Context) {
+func GetAllUsersByHeaders(context *gin.Context) {
 	var users []models.User
 
 	models.DB.Find(&users)
@@ -38,16 +38,51 @@ func GetAllUsers(context *gin.Context) {
 	// } else {
 	// 	context.JSON(http.StatusOK, gin.H{"users": users})
 	// }
-
-	if context.ContentType() == "application/json" {
-		context.JSON(http.StatusOK, gin.H{"users": users})
-	} else if context.ContentType() == "text/plain" {
-		context.Writer.WriteHeader(http.StatusOK)
-		context.Writer.Header().Set("Content-Type", "text/plain")
-		context.Writer.Write([]byte("Success"))
+	if (context.ContentType() == "application/json") || (context.ContentType() == "text/plain") {
+		if context.GetHeader("Accept") == "application/json" {
+			context.JSON(http.StatusOK, gin.H{"users": users})
+		} else if context.GetHeader("Accept") == "text/plain" {
+			context.Writer.WriteHeader(http.StatusOK)
+			context.Writer.Header().Set("Content-Type", "text/plain")
+			context.Writer.Write([]byte("Success"))
+		} else {
+			context.JSON(http.StatusNotFound, gin.H{"error": "Страница не найдена"})
+		}
 	} else {
 		context.JSON(http.StatusNotFound, gin.H{"error": "Страница не найдена"})
 	}
+
+}
+
+// GET /users
+// Получаем список всех юзеров
+func GetAllUsers(context *gin.Context) {
+	var users []models.User
+
+	models.DB.Find(&users)
+
+	if q, ok := context.GetQuery("format"); ok {
+		if q == "json" {
+			context.JSON(http.StatusOK, gin.H{"users": users})
+		}
+		if q == "text" {
+			context.Writer.WriteHeader(http.StatusOK)
+			context.Writer.Header().Set("Content-Type", "text/plain")
+			context.Writer.Write([]byte("Success"))
+		}
+	} else {
+		context.JSON(http.StatusOK, gin.H{"users": users})
+	}
+
+	// if context.ContentType() == "application/json" {
+	// 	context.JSON(http.StatusOK, gin.H{"users": users})
+	// } else if context.ContentType() == "text/plain" {
+	// 	context.Writer.WriteHeader(http.StatusOK)
+	// 	context.Writer.Header().Set("Content-Type", "text/plain")
+	// 	context.Writer.Write([]byte("Success"))
+	// } else {
+	// 	context.JSON(http.StatusNotFound, gin.H{"error": "Страница не найдена"})
+	// }
 
 }
 
