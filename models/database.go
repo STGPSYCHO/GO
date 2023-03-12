@@ -14,5 +14,6 @@ func ConnectDB() {
 		panic("Не удалось подключиться к базе данных")
 	}
 	db.AutoMigrate(&User{})
+	db.AutoMigrate(&Product{})
 	DB = db
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <link rel="stylesheet" href="/assets/css/main.css"/> -->
+    <title>Prodcuts</title>
+</head>
+<body>
+    <div class="container">
+        <div class="articles">
+            {{ range .products}}
+            <div class="article article--theme-dark">
+                <img class="article__image" src={{.Picture}} >
+                <h2 class="article__title">{{.Name}}</h2>
+                <div class="article__content">
+                    <p>{{.Price}}</p>
+                </div>
+                <form class="form">
+                    <input  value={{.ID}} name="product"  type="hidden"/>
+                    <input  value="1" name="quantity" />
+                    <button type="submit">Добавить в корзину</button>
+                </form>
+                
+            </div>
+            {{ end }}
+        </div>
+    </div>
+</body>
+<script>
+
+    let form = document.querySelectorAll('.form');
+
+    form.forEach((form) => {
+        form.onsubmit = function(event){
+        var xhr = new XMLHttpRequest();
+        var formData = new FormData(this);
+        //open the request
+        xhr.open('POST','http://localhost:8080/add-cart')
+        xhr.setRequestHeader("Content-Type", "application/json");
+        console.log(JSON.stringify(Object.fromEntries(formData)));
+        
+        //send the form data
+        xhr.send(JSON.stringify(Object.fromEntries(formData)));
+        return false;
+        }})
+</script>
+</html>
