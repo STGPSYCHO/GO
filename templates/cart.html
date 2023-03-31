@@ -5,26 +5,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <link rel="stylesheet" href="/assets/css/main.css"/> -->
-    <title>Prodcuts</title>
+    <title>Cart</title>
 </head>
 <body>
     <div class="container">
-        <h1>Продукты</h1>
-        <form action="/cart" method="GET" >
-            <button type="submit">Перейти в корзину</button>
+        <h1>Корзина</h1>
+        <form action="/products" method="GET" >
+            <button type="submit">Вернуться в продукты</button>
         </form>
+
         <div class="articles">
-            {{ range .products}}
+            {{ range .cart}}
             <div class="article article--theme-dark">
                 <img class="article__image" src={{.Picture}} >
                 <h2 class="article__title">{{.Name}}</h2>
                 <div class="article__content">
                     <p>{{.Price}}</p>
                 </div>
-                <form class="form" action="/add-cart" method="POST">
+                <form class="form" action="/remove-cart" method="POST">
                     <input  value={{.ID}} name="product"  type="hidden"/>
-                    <input  value="1" name="quantity" />
-                    <button type="submit">Добавить в корзину</button>
+                    <input  value={{.Quantity}} name="quantity" readonly />
+                    <button type="submit">Удалить товар из корзины</button>
                 </form>
             </div>
             {{ end }}

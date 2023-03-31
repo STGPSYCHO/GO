@@ -26,7 +26,7 @@ func main() {
 	// Работа с продуктами
 	route.GET("/products", controllers.GetAllProducts)
 	route.POST("/add-cart", controllers.AddProductToCart)
-	route.POST("/remove-cart", controllers.RemoveProductToCart)
+	route.POST("/remove-cart", controllers.RemoveProductFromCart)
 	route.GET("/cookie", controllers.GetCookie)
 	route.GET("/cart", controllers.GetCart)
 
