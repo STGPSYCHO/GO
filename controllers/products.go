@@ -16,7 +16,7 @@ type AddProductInput struct {
 	Quantity string `json:"quantity"`
 }
 type CartProducts struct {
-	ID       uint   `json:"id"`
+	ID       uint   `json:"id" gorm:"primary_key"`
 	Name     string `json:"name"`
 	Price    string `json:"price"`
 	Picture  string `json:"pic_link"`
@@ -65,7 +65,7 @@ func AddProductToCart(context *gin.Context) {
 	}
 
 	change_string := ""
-	if cookie != "" { // 1:1,2:1,3:5
+	if cookie != "" { // 1:1,2:1,3:5,4:20,5:10
 		cart = strings.Split(cookie, ",") // 1:1 2:1 3:5
 		for idx, str := range cart {      // 1:1
 			split_str := strings.Split(str, ":")      // 1 1
@@ -139,8 +139,8 @@ func GetCart(context *gin.Context) {
 
 	var arr []AddProductInput       // массив объектов инпута, которые пришли из кук
 	var cartProducts []CartProducts // массив конечных продуктов в корзине
-
 	var products []models.Product
+
 	if err := models.DB.Find(&products).Error; err != nil {
 		context.JSON(http.StatusNotFound, gin.H{"error": "Нет подходящих записей"})
 		return
